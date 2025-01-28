@@ -13,7 +13,7 @@ public class EnemyListener : Listener
     // Whenever an enemy dies, check every enemy to see if there are any still alive. If not, invoke the event and set this component to true.
     protected override void OnStatusChange() {
         foreach (Enemy enemy in enemies) {
-            if (enemy.CheckIsAlive()) {
+            if (enemy.IsAlive) {
                 return;
             }
         }

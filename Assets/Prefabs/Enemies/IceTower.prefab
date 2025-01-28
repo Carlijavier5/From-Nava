@@ -45,8 +45,8 @@ GameObject:
   - component: {fileID: 3570325442150851924}
   - component: {fileID: 3570325442150851928}
   - component: {fileID: 7147859089947672259}
-  - component: {fileID: 2880031122338850227}
-  - component: {fileID: 5366220940276059311}
+  - component: {fileID: 5790009976418968154}
+  - component: {fileID: 2339965791669581051}
   m_Layer: 0
   m_Name: IceTower
   m_TagString: Enemy
@@ -202,17 +202,18 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 10a723323d004f54ea57365880aa320c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  maxHealth: 5
-  healthBar: {fileID: 6959082787431209940}
-  isIceTower: 1
-  damageFlash: {fileID: 2880031122338850227}
-  dealthShader: {fileID: 0}
+  attributes:
+    isHeavy: 0
+    isCopyable: 0
+  defaultState: 0
+  spriteRenderers:
+  - {fileID: 3570325442150851927}
   tutorialSpellObject: {fileID: 0}
   onMeleeHit:
     m_PersistentCalls:
       m_Calls: []
   currState: 0
---- !u!114 &2880031122338850227
+--- !u!114 &5790009976418968154
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -221,12 +222,14 @@ MonoBehaviour:
   m_GameObject: {fileID: 3570325442150851925}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 340f19f892c97da43a69aeca75659afe, type: 3}
+  m_Script: {fileID: 11500000, guid: a61cdf459ff2d9a458dee1c1f041c5ed, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  dissolveController: {fileID: 2339965791669581051}
+  maxHealth: 5
   flashMaterial: {fileID: 2100000, guid: 6e7a5fcd9775fcd40a27cf24bd9f8d93, type: 2}
-  duration: 0.125
---- !u!114 &5366220940276059311
+  flashDuration: 0.125
+--- !u!114 &2339965791669581051
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -235,12 +238,11 @@ MonoBehaviour:
   m_GameObject: {fileID: 3570325442150851925}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: d78d5504e54954640985696cebcc01c2, type: 3}
+  m_Script: {fileID: 11500000, guid: 3a22bf5305dd7574dbd901b2ca3f52a2, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  dissolveAmount: 1
-  dissolveSpeed: 1
-  isDissolving: 0
+  baseObject: {fileID: 7147859089947672259}
+  material: {fileID: 2100000, guid: 2aa7128bdd2dd9746933cd7f394bd7c7, type: 2}
 --- !u!1 &6938067032728277203
 GameObject:
   m_ObjectHideFlags: 0
@@ -323,6 +325,14 @@ PrefabInstance:
       propertyPath: scale
       value: 1
       objectReference: {fileID: 0}
+    - target: {fileID: 3258770916241397997, guid: b6601f376d590114682164075b2d7b68, type: 3}
+      propertyPath: enemyScript
+      value: 
+      objectReference: {fileID: 7147859089947672259}
+    - target: {fileID: 3258770916241397997, guid: b6601f376d590114682164075b2d7b68, type: 3}
+      propertyPath: damageableModule
+      value: 
+      objectReference: {fileID: 5790009976418968154}
     - target: {fileID: 3258770916241397997, guid: b6601f376d590114682164075b2d7b68, type: 3}
       propertyPath: lineColors.Array.size
       value: 2
@@ -465,11 +475,6 @@ PrefabInstance:
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: b6601f376d590114682164075b2d7b68, type: 3}
---- !u!1 &6959082787431209940 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 3258770916241397999, guid: b6601f376d590114682164075b2d7b68, type: 3}
-  m_PrefabInstance: {fileID: 5596525237701051195}
-  m_PrefabAsset: {fileID: 0}
 --- !u!4 &6959082787431209941 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 3258770916241397998, guid: b6601f376d590114682164075b2d7b68, type: 3}

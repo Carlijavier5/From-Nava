@@ -24,6 +24,9 @@ public class EnemyHealthBar : MonoBehaviour {
     [Tooltip("Offset between the bar ends and the actual bars, in pixels;")] [SerializeField]
     private float endOffset;
 
+    [SerializeField] private Damageable damageableModule;
+    [SerializeField] private Enemy enemyScript;
+
     [SerializeField] private Gradient[] lineColors;
     [SerializeField] private Sprite[] barSprites;
 
@@ -48,17 +51,17 @@ public class EnemyHealthBar : MonoBehaviour {
     } private State state = State.FadeIn;
 
     // Start, but better >:D
-    public void SetUp(int maxHP, int hp) {
-        this.maxHP = maxHP;
-        this.hp = hp;
-        var enemyScript = transform.parent.GetComponent<Enemy>();
-        if (enemyScript != null) {
-            enemyScript.OnDamageTaken += EnemyHealthBar_OnDamageTaken;
-            enemyScript.OnPlayerInRange += EnemyHealthBar_OnPlayerInRange;
-        }
+    void Awake() {
+        damageableModule.OnDamageTaken += Damageable_OnDamageTaken;
+        if (enemyScript != null) enemyScript.OnPlayerInRange += Enemy_OnPlayerInRange;
+
+        maxHP = damageableModule.MaxHealth;
+        hp = maxHP;
 
         pixelUnit = 1f / (float)barSprites[0].pixelsPerUnit;
-        orderVal = PlayerController.Instance.GetComponent<SpriteRenderer>().sortingOrder + 4;
+        if (PlayerController.Instance.TryGetComponent(out SpriteRenderer playerRenderer)) {
+            orderVal = playerRenderer.sortingOrder + 4;
+        }
         swipeSpeed = swipeSpeed * scale * barLength / 48f;
 
         // Get the base length of each sprite tile (0.0625f * # of pixels);
@@ -156,7 +159,7 @@ public class EnemyHealthBar : MonoBehaviour {
         } return currentValue;
     }
 
-    private void EnemyHealthBar_OnDamageTaken(int dmg) {
+    private void Damageable_OnDamageTaken(int dmg) {
         if (hp < dmg) { dmg = hp; hp = 0; }
         else { hp -= dmg; }
         whitelineOffset = new Vector2(nodePositions[hp + dmg].x - nodePositions[hp].x, 0);
@@ -164,7 +167,8 @@ public class EnemyHealthBar : MonoBehaviour {
         if (hp == 0) state = State.FadeOut;
     }
 
-    private void EnemyHealthBar_OnPlayerInRange(Enemy enemy, bool playerInRange) {
+    private void Enemy_OnPlayerInRange(Enemy enemy, bool playerInRange) {
+        gameObject.SetActive(true);
         state = playerInRange ? State.FadeIn : State.FadeOut;
     }
 

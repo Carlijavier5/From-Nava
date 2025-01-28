@@ -11,12 +11,12 @@ GameObject:
   - component: {fileID: 8977602870948847092}
   - component: {fileID: 6389482856583591886}
   - component: {fileID: 5794971183758856041}
-  - component: {fileID: 2055351074152771722}
-  - component: {fileID: 4448647195134008995}
   - component: {fileID: -93505224944371916}
   - component: {fileID: 1715249207882019669}
   - component: {fileID: 5147448463146023319}
   - component: {fileID: 4275541551438498631}
+  - component: {fileID: 2571516212402415586}
+  - component: {fileID: 2221580496855406089}
   - component: {fileID: 8734685110782888771}
   - component: {fileID: 3702030663533370546}
   - component: {fileID: 1026724369791607120}
@@ -58,7 +58,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   spell: {fileID: 11400000, guid: 0b831836399b0754d9f5861a550b1331, type: 2}
-  bruhCollider: {fileID: -2089954158172821264}
   rb: {fileID: 1026724369791607120}
   rotate: {x: 0, y: 0, z: -90}
   spellActive: 1
@@ -79,39 +78,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4de291001939b8a4eb327241aa8bc334, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  health: 15
-  damageFlash: {fileID: 4448647195134008995}
-  dealthShader: {fileID: 0}
-  spell: {fileID: 11400000, guid: 0b831836399b0754d9f5861a550b1331, type: 2}
---- !u!114 &2055351074152771722
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 5135262842242903108}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: d78d5504e54954640985696cebcc01c2, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  dissolveAmount: 1
-  dissolveSpeed: 1
-  isDissolving: 0
---- !u!114 &4448647195134008995
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 5135262842242903108}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 340f19f892c97da43a69aeca75659afe, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  flashMaterial: {fileID: 2100000, guid: 6e7a5fcd9775fcd40a27cf24bd9f8d93, type: 2}
-  duration: 0.125
+  damageableModule: {fileID: 0}
+  spellData: {fileID: 0}
 --- !u!114 &-93505224944371916
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -128,6 +96,7 @@ MonoBehaviour:
     isHeavy: 1
     isCopyable: 0
   defaultState: 0
+  spriteRenderers: []
 --- !u!114 &1715249207882019669
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -159,6 +128,7 @@ MonoBehaviour:
   shineSpeed: 3.5
   shineWaitRange: {x: 6, y: 8}
   freezeMaterial: {fileID: 2100000, guid: 9eab87c4428710a4dbb58454862a67b3, type: 2}
+  spriteSwapper: {fileID: 0}
 --- !u!114 &4275541551438498631
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -173,6 +143,36 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   dust: {fileID: 4771723497709212244}
   pushMultiplier: 1
+--- !u!114 &2571516212402415586
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5135262842242903108}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a61cdf459ff2d9a458dee1c1f041c5ed, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  dissolveController: {fileID: 2221580496855406089}
+  maxHealth: 5
+  flashMaterial: {fileID: 2100000, guid: 6e7a5fcd9775fcd40a27cf24bd9f8d93, type: 2}
+  flashDuration: 0.125
+--- !u!114 &2221580496855406089
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5135262842242903108}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3a22bf5305dd7574dbd901b2ca3f52a2, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  baseObject: {fileID: -93505224944371916}
+  material: {fileID: 2100000, guid: 2aa7128bdd2dd9746933cd7f394bd7c7, type: 2}
 --- !u!212 &8734685110782888771
 SpriteRenderer:
   m_ObjectHideFlags: 0

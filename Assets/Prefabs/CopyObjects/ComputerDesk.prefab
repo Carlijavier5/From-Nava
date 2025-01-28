@@ -91,6 +91,9 @@ MonoBehaviour:
     isHeavy: 0
     isCopyable: 0
   defaultState: 0
+  spriteRenderers:
+  - {fileID: 8544901404632152555}
+  - {fileID: 5987085333170430064}
 --- !u!114 &8467074210979880231
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -135,9 +138,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e0cb04e094a599a44ab405862476ae5d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  range: 2
-  isCredits: 0
   buttonTutorial: {fileID: 3273071872446632614, guid: 784d0ccf04d20ef46bc2244ea1cc5580, type: 3}
+  isCredits: 0
 --- !u!212 &8544901404632152555
 SpriteRenderer:
   m_ObjectHideFlags: 0
@@ -414,6 +416,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: e6283506ffee066499dee904319ccb3e, type: 3}
+--- !u!212 &5987085333170430064 stripped
+SpriteRenderer:
+  m_CorrespondingSourceObject: {fileID: 560449269279208118, guid: e6283506ffee066499dee904319ccb3e, type: 3}
+  m_PrefabInstance: {fileID: 6111802266657788614}
+  m_PrefabAsset: {fileID: 0}
 --- !u!114 &7395272209462929412 stripped
 MonoBehaviour:
   m_CorrespondingSourceObject: {fileID: 3634461125372525250, guid: e6283506ffee066499dee904319ccb3e, type: 3}

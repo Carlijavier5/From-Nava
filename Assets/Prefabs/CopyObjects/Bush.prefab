@@ -59,6 +59,9 @@ MonoBehaviour:
     isHeavy: 0
     isCopyable: 0
   defaultState: 0
+  spriteRenderers:
+  - {fileID: 5693930533815305302}
+  - {fileID: 2226282565009306481}
 --- !u!114 &534121138561750464
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -319,6 +322,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: e6283506ffee066499dee904319ccb3e, type: 3}
+--- !u!212 &2226282565009306481 stripped
+SpriteRenderer:
+  m_CorrespondingSourceObject: {fileID: 560449269279208118, guid: e6283506ffee066499dee904319ccb3e, type: 3}
+  m_PrefabInstance: {fileID: 1811086513036181959}
+  m_PrefabAsset: {fileID: 0}
 --- !u!114 &3121688014381546245 stripped
 MonoBehaviour:
   m_CorrespondingSourceObject: {fileID: 3634461125372525250, guid: e6283506ffee066499dee904319ccb3e, type: 3}

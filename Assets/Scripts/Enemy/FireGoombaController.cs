@@ -111,7 +111,7 @@ public class FireGoombaController : MonoBehaviour
                     currFireballTime = 0;
                     state = EnemyState.CHASE;
                 }
-                if (player.gameObject.GetComponent<PlayerController>().playerHealth <= 0) {
+                if (player.GetComponent<PlayerController>().PlayerHealth <= 0) {
                     enemy.ReactToPlayerInRange(false);
                     state = EnemyState.IDLE;
                 }

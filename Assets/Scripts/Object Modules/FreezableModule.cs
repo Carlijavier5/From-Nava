@@ -27,6 +27,7 @@ public class FreezableModule : ObjectModule {
                 if (!heatSignal) {
                     baseObject.SetState(ObjectState.Frozen);
                     if (spriteSwapper) spriteRenderer.sprite = spriteSwapper.Frozen;
+                    baseObject.ApplyMaterial(freezeMaterial);
                     StopAllCoroutines();
                     StartCoroutine(FreezeAsync(1));
                 } break;
@@ -41,9 +42,7 @@ public class FreezableModule : ObjectModule {
     }
 
     private IEnumerator FreezeAsync(float targetFreeze) {
-        if (spriteRenderer.sharedMaterial != freezeMaterial) {
-            spriteRenderer.sharedMaterial = freezeMaterial;
-        } MaterialPropertyBlock mpb = new();
+        MaterialPropertyBlock mpb = new();
         spriteRenderer.GetPropertyBlock(mpb);
         float frost = mpb.GetFloat("_Frost");
         mpb.SetFloat("_Frost_Pattern_Seed", patternSeed);
@@ -55,6 +54,7 @@ public class FreezableModule : ObjectModule {
             yield return null;
         } if (targetFreeze == 0) {
             patternSeed = Random.Range(1.5f, 10f);
+            baseObject.RemoveMaterial(freezeMaterial);
             OnFreezeEnd?.Invoke();
         } while (targetFreeze > 0) {
             float shinePass = -1;

@@ -7,7 +7,6 @@ public class Spell : MonoBehaviour
     public event System.Action<GameObject> OnSpellDestroy;
 
     //[SerializeField] private LogicScript logicScript;
-    [SerializeField] private Collider2D bruhCollider;
     [SerializeField] private Rigidbody2D rb;
 
     [SerializeField] private Vector3 rotate;
@@ -16,7 +15,7 @@ public class Spell : MonoBehaviour
     [SerializeField] private bool isWind = false;
     [SerializeField] private bool isPiplup = false;
 
-    public Vector2 direction;
+    [HideInInspector] public Vector2 direction;
     public Collider2D[] CasterColliders { get; private set; }
 
     public int damage;
@@ -24,10 +23,6 @@ public class Spell : MonoBehaviour
 
     private void Awake()
     {
-
-        if (bruhCollider == null) bruhCollider = GetComponent<Collider2D>();
-        bruhCollider.isTrigger = true;
-
         rb = GetComponent<Rigidbody2D>();
         if (!isChair) {
             rb.isKinematic = true;
@@ -74,22 +69,11 @@ public class Spell : MonoBehaviour
     private void OnTriggerEnter2D(Collider2D other) {
         if (CasterColliders != null 
             && CasterColliders.Contains(other)) return;
-        IDamageable damageable = other.GetComponent<IDamageable>();
-        if (damageable != null) {
-            // print("spellscript");
-        }
-        if (other.gameObject.CompareTag("Player")) {
-            return;
-        }
-        
-        if (other.gameObject.CompareTag("IceTower")) {
-            return;
-        }
-        if (other.gameObject.CompareTag("Pit")) {
-            return;
-        }
 
-        if (isChair || isPiplup) {
+        if (other.gameObject.CompareTag("Player")
+            || other.gameObject.CompareTag("IceTower")
+            || other.gameObject.CompareTag("Pit")
+            || isChair || isPiplup) {
             return;
         }
 
@@ -103,10 +87,9 @@ public class Spell : MonoBehaviour
         }
 
         //Apply hit particle effects, sfx, spell effects\
-        if(other.gameObject.CompareTag("Enemy")) {
-            Enemy enemyHealth = other.GetComponent<Enemy>();
-            enemyHealth.Damage(spell.damageAmt);
-            Destroy(this.gameObject);
+        if(other.TryGetComponent(out BaseObject target)) {
+            target.Damage(spell.damageAmt);
+            if (target is Enemy) Destroy(gameObject);
         }
 		OnSpellDestroy?.Invoke(other.gameObject);
     }

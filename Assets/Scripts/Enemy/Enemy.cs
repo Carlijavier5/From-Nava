@@ -15,19 +15,14 @@ public enum EnemyState {
     DEAD
 }
 
-public class Enemy : MonoBehaviour, IDamageable, IPushable
+public class Enemy : BaseObject, IPushable
 {
-    public event Action<int> OnDamageTaken;
     public event Action<Enemy, bool> OnPlayerInRange;
     public event Action OnDeath;
-    [SerializeField] private int maxHealth = 50;
 
-    [SerializeField] private GameObject healthBar;
-    public bool isIceTower = false;
-    [SerializeField] private DamageFlash damageFlash;
-    [SerializeField] private DealthDissolveShader dealthShader;
+    public bool IsAlive { get; private set; } = true;
+
     [SerializeField] private GameObject tutorialSpellObject;
-    private int currHealth;
 
     private bool isPushed;
     private float pushDist;
@@ -36,22 +31,13 @@ public class Enemy : MonoBehaviour, IDamageable, IPushable
 
     public UnityEvent onMeleeHit;
 
-    private Animator animator;
-
-    private SpriteRenderer sr;
-
     public EnemyState currState;
 
-    private void Start() {
+    protected override void Start() {
+        base.Start();
         OnPlayerInRange += BattleManager.Instance.RegisterEnemy;
 
-        currHealth = maxHealth;
         isPushed = false;
-        animator = GetComponent<Animator>();
-        dealthShader = GetComponent<DealthDissolveShader>();
-        sr = GetComponent<SpriteRenderer>();
-
-        healthBar.GetComponent<EnemyHealthBar>().SetUp((int) maxHealth, (int) currHealth);
     }
 
     void OnDestroy() {
@@ -59,21 +45,7 @@ public class Enemy : MonoBehaviour, IDamageable, IPushable
         OnDeath?.Invoke();
     }
 
-    public void Damage(int damage) {
-
-        currHealth -= damage;
-        OnDamageTaken?.Invoke((int) damage);
-        if (damageFlash != null)
-        {
-            damageFlash.Flash();
-        }
-        if (currHealth <= 0) {
-            if (!isIceTower) {
-                animator.SetBool("isDead", true);
-            }
-            StartCoroutine(DeathSequence());
-        }
-    }
+    public override void Kill() => StartCoroutine(DeathSequence());
 
     public void Push(Vector2 dir, float dist, float spd) {
         isPushed = true;
@@ -96,21 +68,15 @@ public class Enemy : MonoBehaviour, IDamageable, IPushable
     }
 
     IEnumerator DeathSequence() {
-        dealthShader.DissolveOut();
+        IsAlive = false;
         yield return new WaitForSeconds(1f);
         if (tutorialSpellObject) {
             tutorialSpellObject.transform.position = gameObject.transform.position;
         }
-        Destroy(this.gameObject);
-    }
-
-    public bool CheckIsAlive() {
-        return currHealth > 0;
+        Destroy(gameObject);
     }
 
     public void ReactToPlayerInRange(bool playerInRange) {
-        healthBar.SetActive(true);
-
         OnPlayerInRange?.Invoke(this, playerInRange);
     }
 

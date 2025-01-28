@@ -6,13 +6,13 @@ using UnityEngine.UI;
 public class HealthBar : MonoBehaviour
 {
     [SerializeField] private PlayerController playerControl;
+    [SerializeField] private Damageable damageable;
     private int health;
     public Image[] healthBars;
-    //private bool hasFlashed;
-    // Start is called before the first frame update
-    void Start()
-    {
-        health = playerControl.playerHealth;
+
+    void Start() {
+        damageable.OnDamageTaken += Damageable_OnDamageTaken;
+        health = damageable.CurrHealth;
         if (health >= 9) {
             healthBars[9].gameObject.SetActive(true);
         } else if (health <= 0) {
@@ -22,7 +22,8 @@ public class HealthBar : MonoBehaviour
         }
     }
 
-    public void ChangeHealth(int newHealth) {
+    private void Damageable_OnDamageTaken(int _) {
+        int newHealth = damageable.CurrHealth;
         for (int i = 0; i < 10; i++) {
             healthBars[i].gameObject.SetActive(false);
         }
@@ -33,10 +34,13 @@ public class HealthBar : MonoBehaviour
         StartCoroutine(FlashingHealth(newHealth));
     }
 
+    public void ChangeHealth(int newHealth) {
+
+    }
+
     IEnumerator FlashingHealth(int newHealth) {
         healthBars[newHealth].gameObject.GetComponent<Image>().color = new Color32(255, 255, 255, 255);
         yield return new WaitForSeconds(0.25f);
         healthBars[newHealth].gameObject.GetComponent<Image>().color = new Color32(255, 255, 255, 150);
-        //hasFlashed = true;
     }
 }

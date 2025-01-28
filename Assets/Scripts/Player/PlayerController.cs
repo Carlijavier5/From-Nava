@@ -9,16 +9,19 @@ using UnityEngine.SceneManagement;
 using UnityEngine.Events;
 
 //Handle input and movement on Player
-public class PlayerController : Singleton<PlayerController>, IDamageable, IPushable
+public class PlayerController : Singleton<PlayerController>, IPushable
 {
     [SerializeField] bool isDark;
-    public int playerHealth;
-    [SerializeField] private int maxHealth;
     [SerializeField] private float speed = 7f;
-    [SerializeField] private DamageFlash damageFlash;
-    [SerializeField] private DealthDissolveShader dissolveShader;
 
+    [SerializeField] private Damageable damageableModule;
+    [SerializeField] private DissolveController dissolveController;
+
+    public bool IsAlive => damageableModule.CurrHealth > 0;
+    public int PlayerHealth => damageableModule.CurrHealth;
     public Transform spawn;
+
+    [SerializeField] private MeleeController meleeController;
 
     [SerializeField] private Transform rightCast;
     [SerializeField] private Transform leftCast;
@@ -53,10 +56,6 @@ public class PlayerController : Singleton<PlayerController>, IDamageable, IPusha
 
     private PlayerInput input;
 
-    [SerializeField] private float iFrameTime;
-    private float currIFrameTime;
-    private bool canBeDamaged;
-    private bool hasDusted;
     public ParticleSystem dust;
 
     private bool hasSetDir;
@@ -68,15 +67,12 @@ public class PlayerController : Singleton<PlayerController>, IDamageable, IPusha
     private bool shouldMove = true;
     private bool shouldChangeDir = true;
 
-    //Boolean used to try to fix the issue of dying while reading
-    private bool inTransition = false;
-
     private void Awake() {
         InitializeSingleton();
     }
 
-    private void Start()
-    {
+    private void Start() {
+        damageableModule.OnDeath += DamageableModule_OnDeath;
         input = GetComponent<PlayerInput>();
         bruhLight = this.transform.GetChild(0).gameObject;
         facingDir = Vector2.up;
@@ -85,11 +81,12 @@ public class PlayerController : Singleton<PlayerController>, IDamageable, IPusha
         animator = GetComponent<Animator>();
         isDark = (spawn.gameObject.tag == "DarkRoom");
         bruhLight.SetActive(isDark);
-        playerHealth = maxHealth;
         canMove = true;
         canChangeDir = true;
-        canBeDamaged = true;
-        currIFrameTime = iFrameTime;
+    }
+
+    private void DamageableModule_OnDeath() {
+        StartCoroutine(Die());
     }
 
     private void FixedUpdate() {
@@ -102,16 +99,10 @@ public class PlayerController : Singleton<PlayerController>, IDamageable, IPusha
         if (isPushed) {
             PushTranslate();
         }
-        if (!inTransition && playerHealth > 0 && currIFrameTime >= iFrameTime) {
-            canBeDamaged = true;
-        } else {
-            canBeDamaged = false;
-            currIFrameTime += Time.deltaTime;
-        }
     }
 
     private void OnMove(InputValue movementValue) {
-        if (playerHealth > 0) {
+        if (IsAlive) {
             movement = movementValue.Get<Vector2>();
             ChooseFacingDir();
         }
@@ -156,34 +147,10 @@ public class PlayerController : Singleton<PlayerController>, IDamageable, IPusha
             hasSetDir = false;
     }
 
-    private void OnTriggerEnter2D(Collider2D other) {
-        if (other.gameObject.CompareTag("EnemyProjectile")) {
-            Damage(1);
-        }
-    }
-
-    public void Damage(int damageAmt) {
-        if (canBeDamaged) {
-            playerHealth -= damageAmt;
-            GetComponent<HealthBar>().ChangeHealth(playerHealth);
-            if (damageFlash != null) {
-                damageFlash.Flash();
-            }
-            currIFrameTime = 0f;
-            if (playerHealth <= 0) {
-                playerHealth = 0;
-                StartCoroutine(Die());
-            }
-        }
-    }
-
-    IEnumerator Die() {
+    private IEnumerator Die() {
 		DeactivateMovement();
-        playerHealth = maxHealth;
-        canBeDamaged = false;
+        damageableModule.RestoreHealth(damageableModule.MaxHealth);
         movement = new Vector2(0, 0);
-        dissolveShader.DissolveOut();
-		GetComponent<Collider2D>().enabled = false;
         animator.SetBool("isWalking", false);
         animator.SetBool("isHurt", true);
         yield return new WaitForSeconds(1.5f);
@@ -191,13 +158,11 @@ public class PlayerController : Singleton<PlayerController>, IDamageable, IPusha
         yield return new WaitForSeconds(1.5f);
         transform.position = spawn.transform.position;
         animator.SetBool("isHurt", false);
-		dissolveShader.DissolveIn();
+		dissolveController.DissolveIn();
         ReferenceSingleton.Instance.transition.FadeIn();
-        GetComponent<Collider2D>().enabled = true;
         yield return new WaitForSeconds(2f);
+        damageableModule.ToggleIFrame(false);
         ActivateMovement();
-        canBeDamaged = true;
-        GetComponent<HealthBar>().ChangeHealth(playerHealth);
     }
 
     void OnMelee() {
@@ -209,6 +174,7 @@ public class PlayerController : Singleton<PlayerController>, IDamageable, IPusha
             //will then directly call SafeActivateMovement. Check each individual animation for melee to ensure that everything is
             //accounted for.
             animator.SetTrigger("doMelee");
+            meleeController.DoMelee(facingDir);
             //ScreenShake.Instance.ShakeScreen(5f, .1f);
 		}
     }
@@ -232,16 +198,14 @@ public class PlayerController : Singleton<PlayerController>, IDamageable, IPusha
     public void ActivateMovement() {
         shouldMove = true;
         shouldChangeDir = true;
-        canBeDamaged = true;
-        inTransition = false;
+        damageableModule.ToggleIFrame(false);
         SafeActivateMovement();
     }
 
     public void DeactivateMovement() {
         shouldMove = false;
         shouldChangeDir = false;
-        canBeDamaged = false;
-        inTransition = true;
+        damageableModule.ToggleIFrame(true);
         SafeDeactivateMovement();
     }
 
@@ -255,8 +219,9 @@ public class PlayerController : Singleton<PlayerController>, IDamageable, IPusha
 			isDark = false;
             bruhLight.SetActive(isDark);
 		}
-
 	}
+
+    public void Kill() => damageableModule.Kill();
 
     //adding push behavior for spikes
     public void Push(Vector2 dir, float dist, float spd) {

@@ -9,6 +9,7 @@ public class BaseObject : MonoBehaviour {
 
     public event System.Action<Vector2, float> OnBlow;
     public event System.Action<ObjectState, bool> OnHeatToggle;
+    public event System.Action<int> OnDamage;
     public event System.Action OnCopy;
 
     [System.Serializable] public class ObjectAttributes {
@@ -17,6 +18,10 @@ public class BaseObject : MonoBehaviour {
     }[SerializeField] protected ObjectAttributes attributes;
     public ObjectAttributes Attributes => attributes;
     [SerializeField] protected ObjectState defaultState;
+
+    [SerializeField] private SpriteRenderer[] spriteRenderers;
+    public SpriteRenderer[] SpriteRenderers => spriteRenderers;
+    private readonly Dictionary<SpriteRenderer, List<Material>> materialDict = new();
 
     public BaseObject ParentObject { get; protected set; }
 
@@ -32,7 +37,10 @@ public class BaseObject : MonoBehaviour {
     /// <param name="parentObject"> Object to link; </param>
     public void AttachTo(BaseObject parentObject) => ParentObject = parentObject;
 
-    protected virtual void Awake() => origin = transform.position;
+    protected virtual void Awake() {
+        SurveyBaseMaterials();
+        origin = transform.position;
+    }
 
     protected virtual void Start() => ObjectReset();
 
@@ -43,6 +51,9 @@ public class BaseObject : MonoBehaviour {
     public virtual void Blow(MonoBehaviour trigger, Vector2 dir, float strength) {
         if (IsTriggerRelevant(trigger)) OnBlow?.Invoke(dir, strength);
     }
+    public void Damage(int damageAmount) => OnDamage?.Invoke(damageAmount);
+    public virtual void Kill() { }
+
     public void SignalCopy() {
         OnCopy?.Invoke();
     }
@@ -81,6 +92,41 @@ public class BaseObject : MonoBehaviour {
                 } break;
         }
     }
+
+    private void SurveyBaseMaterials() {
+        foreach (SpriteRenderer renderer in SpriteRenderers) {
+            materialDict[renderer] = new();
+            materialDict[renderer].Add(renderer.material);
+        }
+    }
+
+    public void ApplyMaterial(Material material, bool allowDuplicates = true) {
+        foreach (SpriteRenderer renderer in spriteRenderers) {
+            renderer.material = material;
+            if (allowDuplicates
+            || (!materialDict[renderer].Contains(material))) {
+                materialDict[renderer].Add(material);
+            }
+        }
+    }
+
+    public void RemoveMaterial(Material material) {
+        foreach (KeyValuePair<SpriteRenderer, List<Material>> kvp in materialDict) {
+            List<Material> materialList = kvp.Value;
+            for (int i = 0; i < materialList.Count; i++) {
+                bool isLast = i == materialList.Count - 1;
+                if (materialList[i] == material) {
+                    materialList.RemoveAt(i);
+                    if (isLast && materialList.Count > 0) {
+                        foreach (SpriteRenderer renderer in spriteRenderers) {
+                            renderer.material = materialList.Last();
+                        }
+                    }
+                    break;
+                }
+            }
+        }
+    } 
 
     public virtual void ObjectReset() {
         transform.position = origin;

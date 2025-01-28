@@ -61,12 +61,11 @@ public class Melee : MonoBehaviour
         //Apply hit particle effects, sfx, spell effects - copied from Spell.cs
 
         //checks if melee hits enemy
-        if(other.gameObject.CompareTag("Enemy")) {
-            Enemy enemyHealth = other.GetComponent<Enemy>();
-            if (enemyHealth.isIceTower) {
+        if(other.TryGetComponent(out BaseObject baseObject)) {
+            if (baseObject.TryGetComponent(out IceTowerController _)) {
                 return;
             }
-            enemyHealth.Damage(damage);
+            baseObject.Damage(damage);
         }
         if (other.gameObject.CompareTag("EnemyProjectile")) {
             Destroy(other.gameObject);

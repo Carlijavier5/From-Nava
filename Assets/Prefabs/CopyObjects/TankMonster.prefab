@@ -59,6 +59,9 @@ MonoBehaviour:
     isHeavy: 1
     isCopyable: 0
   defaultState: 0
+  spriteRenderers:
+  - {fileID: 5667109648531998369}
+  - {fileID: 2691351951073582594}
 --- !u!114 &419961240449073279
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -419,3 +422,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8276877d34f24f54fb258f83a7e59aed, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!212 &2691351951073582594 stripped
+SpriteRenderer:
+  m_CorrespondingSourceObject: {fileID: 560449269279208118, guid: e6283506ffee066499dee904319ccb3e, type: 3}
+  m_PrefabInstance: {fileID: 2494580721545915572}
+  m_PrefabAsset: {fileID: 0}

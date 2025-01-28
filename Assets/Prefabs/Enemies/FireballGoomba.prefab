@@ -12,11 +12,11 @@ GameObject:
   - component: {fileID: 797491692293421794}
   - component: {fileID: 797491692293421796}
   - component: {fileID: 797491692293421799}
+  - component: {fileID: 824402984257792247}
+  - component: {fileID: 1892213875643231662}
   - component: {fileID: 797491692293421798}
   - component: {fileID: 7816608974960025993}
-  - component: {fileID: 6632084955643231022}
   - component: {fileID: 7531634241011708925}
-  - component: {fileID: 6781299553897351116}
   m_Layer: 0
   m_Name: FireballGoomba
   m_TagString: Enemy
@@ -130,16 +130,47 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 10a723323d004f54ea57365880aa320c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  maxHealth: 6
-  healthBar: {fileID: 7088459040438757402}
-  isIceTower: 0
-  damageFlash: {fileID: 6632084955643231022}
-  dealthShader: {fileID: 0}
+  attributes:
+    isHeavy: 0
+    isCopyable: 0
+  defaultState: 0
+  spriteRenderers:
+  - {fileID: 797491692293421794}
   tutorialSpellObject: {fileID: 6424348743349445095, guid: c7013ef1e6e529a47aebf7a7a3b7e9be, type: 3}
   onMeleeHit:
     m_PersistentCalls:
       m_Calls: []
   currState: 0
+--- !u!114 &824402984257792247
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 797491692293421795}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a61cdf459ff2d9a458dee1c1f041c5ed, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  dissolveController: {fileID: 1892213875643231662}
+  maxHealth: 5
+  flashMaterial: {fileID: 2100000, guid: 6e7a5fcd9775fcd40a27cf24bd9f8d93, type: 2}
+  flashDuration: 0.125
+--- !u!114 &1892213875643231662
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 797491692293421795}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3a22bf5305dd7574dbd901b2ca3f52a2, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  baseObject: {fileID: 797491692293421799}
+  material: {fileID: 2100000, guid: 2aa7128bdd2dd9746933cd7f394bd7c7, type: 2}
 --- !u!114 &797491692293421798
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -187,20 +218,6 @@ Rigidbody2D:
   m_SleepingMode: 1
   m_CollisionDetection: 0
   m_Constraints: 4
---- !u!114 &6632084955643231022
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 797491692293421795}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 340f19f892c97da43a69aeca75659afe, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  flashMaterial: {fileID: 2100000, guid: 6e7a5fcd9775fcd40a27cf24bd9f8d93, type: 2}
-  duration: 0.125
 --- !u!95 &7531634241011708925
 Animator:
   serializedVersion: 4
@@ -221,21 +238,6 @@ Animator:
   m_HasTransformHierarchy: 1
   m_AllowConstantClipSamplingOptimization: 1
   m_KeepAnimatorControllerStateOnDisable: 0
---- !u!114 &6781299553897351116
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 797491692293421795}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: d78d5504e54954640985696cebcc01c2, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  dissolveAmount: 1
-  dissolveSpeed: 1
-  isDissolving: 0
 --- !u!1001 &5721323122145325301
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -243,6 +245,14 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 797491692293421797}
     m_Modifications:
+    - target: {fileID: 3258770916241397997, guid: b6601f376d590114682164075b2d7b68, type: 3}
+      propertyPath: enemyScript
+      value: 
+      objectReference: {fileID: 797491692293421799}
+    - target: {fileID: 3258770916241397997, guid: b6601f376d590114682164075b2d7b68, type: 3}
+      propertyPath: damageableModule
+      value: 
+      objectReference: {fileID: 824402984257792247}
     - target: {fileID: 3258770916241397998, guid: b6601f376d590114682164075b2d7b68, type: 3}
       propertyPath: m_RootOrder
       value: 0
@@ -293,11 +303,6 @@ PrefabInstance:
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: b6601f376d590114682164075b2d7b68, type: 3}
---- !u!1 &7088459040438757402 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 3258770916241397999, guid: b6601f376d590114682164075b2d7b68, type: 3}
-  m_PrefabInstance: {fileID: 5721323122145325301}
-  m_PrefabAsset: {fileID: 0}
 --- !u!4 &7088459040438757403 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 3258770916241397998, guid: b6601f376d590114682164075b2d7b68, type: 3}

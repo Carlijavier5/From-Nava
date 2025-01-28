@@ -140,7 +140,7 @@ public class MeleeMiniBossController : MonoBehaviour
                 if (Vector2.Distance(transform.position, player.position) > minDistance) {
                     transform.position = Vector2.MoveTowards(transform.position, player.position, speed * Time.deltaTime);
                 } else {
-                    if (!attacking && player.gameObject.GetComponent<PlayerController>().playerHealth > 0) {
+                    if (!attacking && player.GetComponent<PlayerController>().PlayerHealth > 0) {
                         state = EnemyState.ATTACK;
                     } else {
                         state = EnemyState.IDLE;
@@ -174,7 +174,7 @@ public class MeleeMiniBossController : MonoBehaviour
                 if (!attacking && Vector2.Distance(transform.position, player.position) > minDistance) {
                     state = EnemyState.CHASE;
                 }
-                if (!attacking && player.gameObject.GetComponent<PlayerController>().playerHealth <= 0) {
+                if (!attacking && player.GetComponent<PlayerController>().PlayerHealth <= 0) {
                     state = EnemyState.IDLE;
                     enemy.ReactToPlayerInRange(false);
                 }
@@ -216,7 +216,6 @@ public class MeleeMiniBossController : MonoBehaviour
                     //downHB.SetActive(true);
                 }
             }
-            return;
         } else {
             if (py > transform.position.y) {
                 if ((transform.position.x - px) > (py - transform.position.y)) {

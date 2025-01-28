@@ -6,3 +6,11 @@
         throw new System.NotImplementedException();
     }
 }
+
+public class CopyableResponse {
+
+}
+
+public class CopyableProperties {
+
+}

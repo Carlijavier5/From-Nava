@@ -31,7 +31,6 @@ public class Damageable : ObjectModule {
 
     private void BaseObject_OnDamage(int damageAmount) {
         if (IFrameOn) return;
-        Debug.Log(gameObject.name);
         CurrHealth -= damageAmount;
         OnDamageTaken?.Invoke(damageAmount);
         if (CurrHealth <= 0) {
@@ -39,7 +38,8 @@ public class Damageable : ObjectModule {
             dissolveController.DissolveOut();
             baseObject.Kill();
             OnDeath?.Invoke();
-        } Flash();
+        }
+        Flash();
     }
 
     public void Kill() => BaseObject_OnDamage(maxHealth);
@@ -67,5 +67,7 @@ public class Damageable : ObjectModule {
         flashRoutine = null;
     }
 
+    #if UNITY_EDITOR
     private void Reset() => TryGetComponent(out dissolveController);
+    #endif
 }

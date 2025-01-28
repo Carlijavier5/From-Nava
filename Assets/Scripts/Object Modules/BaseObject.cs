@@ -134,6 +134,13 @@ public class BaseObject : MonoBehaviour {
         SetState(defaultState);
     }
 
+    /// <summary>
+    /// Prevents multiple effect triggers from the same source from executing
+    /// immediately; <br></br> To prevent edge cases where OnTriggerEnter
+    /// is called several times per visible collision;
+    /// </summary>
+    /// <param name="trigger"> Behavior causing the trigger; </param>
+    /// <returns> Whether the object should trigger an object effect; </returns>
     private bool IsTriggerRelevant(MonoBehaviour trigger) {
         if (triggers.Contains(trigger)) return false;
         triggers.Add(trigger);
